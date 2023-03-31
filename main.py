@@ -70,6 +70,45 @@ def calc_pixel(w: int, h: int):
     return np.clip(pixel_color / samples_per_pixel, 0, 1.0) ** 0.5
 
 
+def gen_random_scene():
+    world = []
+    ground_material = Lambertian(np.array((0.5, 0.5, 0.5)))
+    world.append(Sphere(np.array((0, -1000, -1.0)), 1000, ground_material))
+    for a in range(-11, 11):
+        for b in range(-11, 11):
+            center = np.array((a + 0.9 * np.random.rand(1)[0],
+                              0.2,
+                              b + 0.9 * np.random.rand(1)[0]))
+
+            choose_mat = np.random.rand(1)[0]
+            if np.linalg.norm(center - np.array((4, 0.2, 0))) > 0.9:
+                if choose_mat < 0.8:
+                    # diffuse
+                    albedo = np.random.rand(3)
+                    sphere_material = Lambertian(albedo)
+                    world.append(Sphere(center, 0.2, sphere_material))
+                elif choose_mat < 0.95:
+                    # metal
+                    albedo = 0.5 + np.random.random(3) / 2.0
+                    fuzz = np.random.random(3) / 2.0
+                    sphere_material = Metal(albedo, fuzz)
+                    world.append(Sphere(center, 0.2, sphere_material))
+                else:
+                    # glass
+                    sphere_material = Dielectric(1.5)
+                    world.append(Sphere(center, 0.2, sphere_material))
+
+    material1 = Dielectric(1.5)
+    world.append(Sphere(np.array((0, 1, 0)), 1.0, material1))
+
+    material2 = Lambertian(np.array((0.4, 0.2, 0.1)))
+    world.append(Sphere(np.array((-4, 1, 0)), 1.0, material2))
+
+    material3 = Metal(np.array((0.7, 0.6, 0.5)), 0.0)
+    world.append(Sphere(np.array((4, 1, 0)), 1.0, material3))
+
+    return world
+
 W = 640
 H = 480
 # sampling for antialiasing (will intersect each pixel multiple times in different areas inside the pixel)
@@ -79,12 +118,17 @@ ground      = Sphere(np.array((    0, -100.5, -1.0)), 100, Lambertian(np.array((
 center_ball = Sphere(np.array((    0,    0.0, -1.0)), 0.5, Lambertian(np.array((0.7, 0.3, 0.3))))
 left_ball   = Sphere(np.array(( -1.0,    0.0, -1.0)), 0.5, Dielectric(1.5))
 right_ball  = Sphere(np.array((  1.0,    0.0, -1.0)), 0.5, Metal(np.array((0.8, 0.6, 0.2))))
-obj_list = [ground, center_ball, left_ball, right_ball]
+obj_list = gen_random_scene() #[ground, center_ball, left_ball, right_ball]
 # camera
-cam = Camera(90, float(W) / H)
-origin = np.array((0.0, 0.0, 0.0))
+look_from = np.array((13, 2, 3))
+look_at = np.array((0.0, 0, 0))
+aperture = 1.0
+
+focus_dist = np.linalg.norm(look_from - look_at)
+cam = Camera(30, float(W) / H, aperture, 1, look_from, look_at)
+
 # number of ray reflections
-max_depth = 15
+max_depth = 10
 
 
 if __name__ == '__main__':
