@@ -13,19 +13,17 @@ class Hittable:
 
 
 class HitInfo:
-    def __init__(self, t, point3D=None, normal3D=None, material=None):
-        self.point = None
-        self.normal = None
-        self.material = None
+    def __init__(self, t, point3D=None, normal3D=None, material=None, front_face=True):
+        self.point = point3D
+        self.normal = normal3D
+        self.material = material
+        self.front_face = front_face
         self.t = t
 
         if t == -1:
             self.valid = False
         else:
             self.valid = True
-            self.point = point3D
-            self.normal = normal3D
-            self.material = material
 
 
 class Sphere(Hittable):
@@ -61,10 +59,10 @@ class Sphere(Hittable):
         normal = normal / self.radius
 
         # correct normal: if ray intersects sphere from inside out - flip normal
-        angle = np.dot(ray.direction, normal) < 0.0
-        normal = normal if angle else -normal
+        front_face = np.dot(ray.direction, normal) < 0.0
+        normal = normal if front_face else -normal
 
-        return HitInfo(root, ray.at(root), normal, self.material)
+        return HitInfo(root, ray.at(root), normal, self.material, front_face)
 
     @staticmethod
     def random_direction():
@@ -82,4 +80,5 @@ class Sphere(Hittable):
         """
         r = np.random.random(3) * 2 - 1
         r[1] = r[1] if r[1] > 0 else -r[1]
+        r = r / np.linalg.norm(r)
         return r if np.dot(r, normal) > 0.0 else -r
