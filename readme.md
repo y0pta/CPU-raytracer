@@ -1,8 +1,8 @@
 # CPU raytracer
 ### Description
 ----
-Simple raytracer CPU raytracer with support of lambertian, metalic surfaces. Uses multiprocessing, so in order to run
-code faster, you can amend number of processes. 
+Simple raytracer CPU with support of lambertian, metalic surfaces. Writen on python, uses multiprocessing, 
+so in order to run and use as playground for better understanding of raytracing. 
 By default, raytracer render random generated scene of spheres.
 Output: png-file render with random scene. 
 #### Requirements
@@ -13,3 +13,11 @@ Output: png-file render with random scene.
 #### Output example
 ----
 ![example](example.png "some random output")
+----
+
+
+
+
+
+Thanks
+https://github.com/RayTracing/raytracing.github.io

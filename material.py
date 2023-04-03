@@ -64,13 +64,9 @@ class Lambertian(Material):
 
     def scatter(self, ray: Ray, hit_info: HitInfo) -> (Ray, np.array):
         scatter_direction = hit_info.normal + Sphere.random_hemisphere_dir(hit_info.normal)
-
-        # if scatter direction near zero, amend it to normal direction (scatter light perpendicular)
-        if np.linalg.norm(scatter_direction) < 0.01:
+        if np.linalg.norm(scatter_direction) < 0.001 * np.linalg.norm(hit_info.normal):
             scatter_direction = hit_info.normal
-
         scattered = Ray(hit_info.point, scatter_direction)
-
         return scattered, self.albedo
 
 
