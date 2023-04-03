@@ -39,8 +39,8 @@ class Camera:
         :param look_from: origin of a camera
         :param look_at: target viewpoint
         """
-        self.fovw = math.radians(fovw)
-        half_w = math.tan(self.fovw/2.0)
+        self.fovw = np.radians(fovw)
+        half_w = np.tan(self.fovw/2.0)
         # viewport width
         self.viewport_w = 2.0 * half_w
         # viewport height
@@ -52,9 +52,11 @@ class Camera:
         self.view_dir = v / np.linalg.norm(v)
         # right vector
         up = np.array((0.0, 1.0, 0))
-        self.right = np.cross(self.view_dir, up)
+        r = np.cross(self.view_dir, up)
+        self.right = r / np.linalg.norm(r)
         # up vector
         self.up = np.cross(self.right, self.view_dir)
+        self.up = self.up / np.linalg.norm(self.up)
         # lens
         self.lens_radius = aperture / 2.0
         self.focus_dist = focus_dist
