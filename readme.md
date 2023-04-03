@@ -20,4 +20,4 @@ Output: png-file render with random scene.
 
 
 Thanks
-https://github.com/RayTracing/raytracing.github.io
+[_Ray Tracing: The Next Week_](https://raytracing.github.io/books/RayTracingTheNextWeek.html) for reference materials.
