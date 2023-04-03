@@ -56,10 +56,10 @@ class Sphere(Hittable):
 
         # find normal points outward
         normal = ray.at(root) - self.origin
-        normal = normal / self.radius
+        normal = normal / np.linalg.norm(normal)
 
         # correct normal: if ray intersects sphere from inside out - flip normal
-        front_face = np.dot(ray.direction, normal) < 0.0
+        front_face = np.dot(ray.direction, normal) <= 0.0
         normal = normal if front_face else -normal
 
         return HitInfo(root, ray.at(root), normal, self.material, front_face)
@@ -70,7 +70,7 @@ class Sphere(Hittable):
         Generates random direction on sphere. All values are in [-1, 1]
         """
         r = np.random.random(3) * 2 - 1
-        r = r / np.linalg.norm(r)
+        r = r.astype('double') / np.linalg.norm(r)
         return r
 
     @staticmethod
@@ -80,5 +80,5 @@ class Sphere(Hittable):
         """
         r = np.random.random(3) * 2 - 1
         r[1] = r[1] if r[1] > 0 else -r[1]
-        r = r / np.linalg.norm(r)
+        r = r.astype('double') / np.linalg.norm(r)
         return r if np.dot(r, normal) > 0.0 else -r
