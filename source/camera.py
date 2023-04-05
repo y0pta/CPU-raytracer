@@ -1,7 +1,7 @@
 import math
 
 import numpy as np
-from ray import Ray
+from .ray import Ray
 
 
 def random_on_disk():
@@ -27,10 +27,11 @@ class Camera:
     """
 
     def __init__(self, fovw: float, aspect_ratio: float,
-                 focus_dist: float,
-                 aperture=2.0,
                  look_from=np.array((0.0, 0.0, 0.0)),
-                 look_at=np.array((0.0, 0.0, -1.0))):
+                 look_at=np.array((0.0, 0.0, -1.0)),
+                 focus_dist=1.0,
+                 aperture=0.0,
+                 ):
         """
         :param fovw: horizontal field of view in DEGREES
         :param aspect_ratio: w/h
@@ -40,7 +41,7 @@ class Camera:
         :param look_at: target viewpoint
         """
         self.fovw = np.radians(fovw)
-        half_w = np.tan(self.fovw/2.0)
+        half_w = np.tan(self.fovw / 2.0)
         # viewport width
         self.viewport_w = 2.0 * half_w
         # viewport height
@@ -71,11 +72,11 @@ class Camera:
         assert -self.viewport_w / 2.0 <= u <= self.viewport_w / 2.0
         assert -self.viewport_h / 2.0 <= v <= self.viewport_h / 2.0
 
-        #rd = self.lens_radius * random_on_disk()
-        #offset = self.right * rd[0] + self.up * rd[1]
+        rd = self.lens_radius * random_on_disk()
+        offset = self.right * rd[0] + self.up * rd[1]
 
-        return Ray(self.origin, #+ offset,
-                     u * self.right #self.focus_dist
-                   + v * self.up
-                   + self.view_dir)
-                   #- offset)
+        return Ray(self.origin + offset,
+                     u * self.right * self.focus_dist
+                   + v * self.up * self.focus_dist
+                   + self.view_dir * self.focus_dist
+                   - offset)

@@ -1,6 +1,6 @@
 import numpy as np
 from numpy import random
-from ray import Ray
+from .ray import Ray
 #from material import Material
 
 inf = np.iinfo(np.int32).max

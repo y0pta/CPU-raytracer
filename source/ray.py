@@ -8,4 +8,3 @@ class Ray:
 
     def at(self, t):
         return self.origin + t * self.direction
-

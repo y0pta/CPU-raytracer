@@ -1,8 +1,8 @@
 import math
 
-from ray import Ray
+from .ray import Ray
 import numpy as np
-from hittable import HitInfo, Sphere
+from source.hittable import HitInfo, Sphere
 
 
 def reflect(v: np.array, n: np.array) -> np.array:
